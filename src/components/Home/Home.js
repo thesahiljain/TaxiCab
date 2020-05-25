@@ -4,25 +4,24 @@ import { connect } from 'react-redux';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 import MapComponent from './MapComponent';
+import { getCurrentLocation } from './HomeUtils';
+ 
+const mapStateToProps = (state) => ({
+    region : state.home.region
+});
 
-const mapStateToProps = (state) => ({});
-
-const mapActionCreators = {};
+const mapActionCreators = { getCurrentLocation };
 
 class Home extends React.Component {
 
+    componentDidMount() {
+        this.props.getCurrentLocation();
+    }
+
     render() {
-
-        const region = {
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.015,
-            longitudeDelta: 0.0121,
-        };
-
         return (
             <View style={{flex:1}}>
-               <MapComponent region={region}/>
+               <MapComponent region={this.props.region}/>
             </View>
         );
     }

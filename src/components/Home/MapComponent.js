@@ -3,10 +3,13 @@ import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { StyleSheet} from 'react-native';
 import { View } from 'native-base';
 
-const MapComponent = ({region}) => {
+const MapComponent = ({region={}}) => {
+
     return (
         <View style={styles.container}>
-            <MapView provider={PROVIDER_GOOGLE} style={styles.map} region={region}></MapView>
+            <MapView provider={PROVIDER_GOOGLE} style={styles.map} region={region}>
+                <MapView.Marker coordinate={region} pinColor='green'/>
+            </MapView>
         </View>
     );
 }
