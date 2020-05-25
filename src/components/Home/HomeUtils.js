@@ -15,7 +15,6 @@ export function getCurrentLocation() {
 }
 
 function handleGetCurrentLocation(state, action) {
-    console.log('Action triggered : ', action);
     if(!action.payload) return state;
     else return update(state, {
         region: {
