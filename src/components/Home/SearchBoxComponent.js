@@ -5,21 +5,27 @@ import { View, Input, InputGroup } from 'native-base';
 import { Dimensions } from 'react-native';
 const width = Dimensions.get('window').width;
 
-const SearchBoxComponent = () => {
+const SearchBoxComponent = ({getInputData, toggleSearchResult, getAddressPredictions}) => {
+
+    function handleInput(key, value) { 
+        getInputData({key: key, value: value});
+        getAddressPredictions();
+    }
+
     return (
         <View style={styles.searchBox}>
             <View style={styles.inputWrapper}>
                 <Text style={styles.label}>PICK-UP</Text>
                 <InputGroup>
                     <Icon name='search' size={15} color='#aaa'/>
-                    <Input style={styles.inputSearch} placeholder='Choose pick-up location'/>
+                    <Input style={styles.inputSearch} placeholder='Choose pick-up location' onChangeText={handleInput.bind(this, 'pickUp')} onFocus={() => toggleSearchResult('pickUp')}/>                 
                 </InputGroup>
             </View>
             <View style={styles.secondInputWrapper}>
                 <Text style={styles.label}>DROP-OFF</Text>
                 <InputGroup>
                     <Icon name='search' size={15} color='#aaa'/>
-                    <Input style={styles.inputSearch} placeholder='Choose drop-off location'/>
+                    <Input style={styles.inputSearch} placeholder='Choose drop-off location' onChangeText={handleInput.bind(this, 'dropOff')} onFocus={() => toggleSearchResult('dropOff')}/>
                 </InputGroup>
             </View>
         </View>

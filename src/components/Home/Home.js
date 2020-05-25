@@ -4,13 +4,16 @@ import { connect } from 'react-redux';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 import MapComponent from './MapComponent';
-import { getCurrentLocation } from './HomeUtils';
+import { getCurrentLocation, getInputData, getAddressPredictions,toggleSearchResult } from './HomeUtils';
  
 const mapStateToProps = (state) => ({
-    region : state.home.region
+    region : state.home.region,
+    inputData : state.home.inputData || {},
+    resultTypes : state.home.resultTypes || {},
+    predictions : state.home.predictions || []
 });
 
-const mapActionCreators = { getCurrentLocation };
+const mapActionCreators = { getCurrentLocation, getInputData, getAddressPredictions, toggleSearchResult };
 
 class Home extends React.Component {
 
@@ -21,7 +24,13 @@ class Home extends React.Component {
     render() {
         return (
             <View style={{flex:1}}>
-               <MapComponent region={this.props.region}/>
+               <MapComponent 
+               region={this.props.region}
+               getInputData={this.props.getInputData}
+               toggleSearchResult={this.props.toggleSearchResult}
+               getAddressPredictions={this.props.getAddressPredictions}
+               resultTypes={this.props.resultTypes}
+               predictions={this.props.predictions}/>              
             </View>
         );
     }
