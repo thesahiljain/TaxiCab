@@ -5,6 +5,7 @@ import { View, List, ListItem, Left, Body } from 'native-base';
 const width = Dimensions.get("window").width;
 
 const SearchResultsComponent = ({predictions}) => {
+
     return (
         <View style={styles.searchResultsWrapper}>
             <List
@@ -18,6 +19,7 @@ const SearchResultsComponent = ({predictions}) => {
                         </Body>
                     </ListItem>
                 }
+                keyExtractor={(item, index) => item.placeID}
             />
         </View>
     );
@@ -28,9 +30,9 @@ const styles = StyleSheet.create({
         top: 180,
         position: 'absolute',
         width: width,
-        height: 1000,
+        flexGrow: 0,
         backgroundColor: '#fff',
-        opacity: 0.9
+        opacity: 0.8
     },
     primaryText:{
         fontWeight: "bold",

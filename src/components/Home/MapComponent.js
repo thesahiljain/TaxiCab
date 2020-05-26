@@ -20,7 +20,6 @@ const MapComponent = ({region={}, getInputData, toggleSearchResult, getAddressPr
 
 const styles = StyleSheet.create({
     container: {
-      ...StyleSheet.absoluteFillObject,
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
