@@ -14,6 +14,7 @@ const mapStateToProps = (state) => ({
     resultTypes : state.home.resultTypes || {},
     predictions : state.home.predictions || [],
     selectedAddress : state.home.selectedAddress || {},
+    fare : state.home.fare,
 });
 
 const mapActionCreators = { getCurrentLocation, getInputData, getAddressPredictions, toggleSearchResult, getSelectedAddress };

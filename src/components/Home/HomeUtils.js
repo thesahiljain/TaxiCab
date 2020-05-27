@@ -2,12 +2,12 @@ import update from 'react-addons-update';
 import Geolocation from '@react-native-community/geolocation';
 import RNGooglePlaces from 'react-native-google-places';
 import { ToastAndroid } from 'react-native';
-import { cos } from 'react-native-reanimated';
  
 const GET_CURRENT_LOCATION = 'GET_CURRENT_LOCATION';
 const GET_INPUT = 'GET_INPUT';
 const GET_ADDRESS_PREDICTIONS = 'GET_ADDRESS_PREDICTIONS';
 const GET_SELECTED_ADDRESS = 'GET_SELECTED_ADDRESS';
+const GET_FARE = 'GET_FARE';
 const TOGGLE_SEARCH_RESULT = 'TOGGLE_SEARCH_RESULT';
 const DEFAULT_REGION = {latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.043, longitudeDelta: 0.0034};
 const FARE = {base : 40, distance : 10, time : 2, surge : 1};
@@ -90,9 +90,10 @@ export function getSelectedAddress(payload) {
                 fetch(url, {method : 'GET'})
                 .then((response) => response.json())
                 .then((response) => {
-                    const duration = response.resourceSets[0].resources[0].travelDuration;
+                    const duration = response.resourceSets[0].resources[0].travelDuration/60;
                     const distance = response.resourceSets[0].resources[0].travelDistance;
-                    console.log('Duration : ', duration, ' Distance : ', distance);
+                    const fare = Math.round(FARE.base + duration*FARE.time + distance*FARE.distance)*FARE.surge;
+                    dispatch({type : GET_FARE, payload : {fare : fare, duration : duration, distance : distance}});
                 })
                 .catch((error) => {
                     console.log('Distance matrix error : ', error);
@@ -117,11 +118,21 @@ function handleGetSelectedAddress(state, action) {
     });
 }
 
+function handleGetFare(state, action) {
+    ToastAndroid.show(JSON.stringify(action.payload), ToastAndroid.SHORT);
+    return update(state, {
+        fare : { $set : action.payload.fair },
+        distance : { $set : action.payload.distance },
+        duration : { $set : action.payload.duration }
+    });
+}
+
 const actionHandlers = {
     GET_CURRENT_LOCATION : handleGetCurrentLocation,
     GET_INPUT : handleGetInputData,
     GET_ADDRESS_PREDICTIONS : handleGetAddressPredictions,
     GET_SELECTED_ADDRESS : handleGetSelectedAddress,
+    GET_FARE : handleGetFare,
     TOGGLE_SEARCH_RESULT : handleToggleSearchResult
 }
 
