@@ -5,11 +5,26 @@ import { View, Input, InputGroup } from 'native-base';
 import { Dimensions } from 'react-native';
 const width = Dimensions.get('window').width;
 
-const SearchBoxComponent = ({getInputData, toggleSearchResult, getAddressPredictions}) => {
+const SearchBoxComponent = ({getInputData, toggleSearchResult, getAddressPredictions, selectedAddress}) => {
 
     function handleInput(key, value) { 
         getInputData({key: key, value: value});
-        getAddressPredictions();
+    }
+
+    function getSelectedPickUp() {
+        if(selectedAddress)
+            if(selectedAddress.selectedPickUp)
+                if(selectedAddress.selectedPickUp.address)
+                    return selectedAddress.selectedPickUp.address;
+        return '';
+    }
+
+    function getSelectedDropOff() {
+        if(selectedAddress)
+            if(selectedAddress.selectedDropOff)
+                if(selectedAddress.selectedDropOff.address)
+                    return selectedAddress.selectedDropOff.address;
+        return '';
     }
 
     return (
@@ -17,15 +32,15 @@ const SearchBoxComponent = ({getInputData, toggleSearchResult, getAddressPredict
             <View style={styles.inputWrapper}>
                 <Text style={styles.label}>PICK-UP</Text>
                 <InputGroup>
-                    <Icon name='search' size={15} color='#aaa'/>
-                    <Input style={styles.inputSearch} placeholder='Choose pick-up location' onChangeText={handleInput.bind(this, 'pickUp')} onFocus={() => toggleSearchResult('pickUp')}/>                 
+                    <Input style={styles.inputSearch} placeholder='Choose pick-up location' onChangeText={handleInput.bind(this, 'pickUp')} onFocus={() => toggleSearchResult('pickUp')}>{getSelectedPickUp()}</Input>
+                    <Icon name='search' size={20} color='#aaa' onPress={() => getAddressPredictions()}/>
                 </InputGroup>
             </View>
             <View style={styles.secondInputWrapper}>
                 <Text style={styles.label}>DROP-OFF</Text>
                 <InputGroup>
-                    <Icon name='search' size={15} color='#aaa'/>
-                    <Input style={styles.inputSearch} placeholder='Choose drop-off location' onChangeText={handleInput.bind(this, 'dropOff')} onFocus={() => toggleSearchResult('dropOff')}/>
+                    <Input style={styles.inputSearch} placeholder='Choose drop-off location' onChangeText={handleInput.bind(this, 'dropOff')} onFocus={() => toggleSearchResult('dropOff')}>{getSelectedDropOff()}</Input>
+                    <Icon name='search' size={20} color='#aaa'  onPress={() => getAddressPredictions()}/>
                 </InputGroup>
             </View>
         </View>
@@ -46,6 +61,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         opacity: 0.8,
         borderRadius: 7,
+        paddingRight: 10
     },
     secondInputWrapper:{
         marginLeft: 15,
@@ -53,14 +69,15 @@ const styles = StyleSheet.create({
         marginTop: 0,
         backgroundColor: '#fff',
         opacity: 0.8,
-        borderRadius: 7
+        borderRadius: 7,
+        paddingRight: 10
     },
     inputSearch:{
         fontSize: 14
     },
     label:{
         fontSize:10,
-        fontStyle: "italic",
+        fontStyle: 'italic',
         marginLeft:10,
         marginTop:10,
         marginBottom:0

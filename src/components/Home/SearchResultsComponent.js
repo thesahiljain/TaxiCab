@@ -4,14 +4,14 @@ import { Text, StyleSheet, Dimensions } from 'react-native';
 import { View, List, ListItem, Left, Body } from 'native-base';
 const width = Dimensions.get("window").width;
 
-const SearchResultsComponent = ({predictions}) => {
+const SearchResultsComponent = ({predictions, getSelectedAddress}) => {
 
     return (
         <View style={styles.searchResultsWrapper}>
             <List
                 dataArray = {predictions}
                 renderRow = {(item) =>
-                    <ListItem button avatar>
+                    <ListItem onPress={() => getSelectedAddress(item.placeID)} button avatar>
                         <Left styles={styles.leftContainer}><Icon size={20} name='location-on'/></Left>
                         <Body>
                             <Text style={styles.primaryText}>{item.primaryText}</Text>
