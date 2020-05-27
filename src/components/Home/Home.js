@@ -7,6 +7,7 @@ import MapComponent from './MapComponent';
 import HeaderComponent from '../UI/HeaderComponent';
 import FooterComponent from '../UI/FooterComponent';
 import { getCurrentLocation, getInputData, getAddressPredictions, getSelectedAddress, toggleSearchResult } from './HomeUtils';
+import FareComponent from './FareComponent';
  
 const mapStateToProps = (state) => ({
     region : state.home.region,
@@ -38,6 +39,7 @@ class Home extends React.Component {
                     predictions={this.props.predictions}
                     getSelectedAddress={this.props.getSelectedAddress}
                     selectedAddress={this.props.selectedAddress}/>
+                {this.props.fare && <FareComponent fare={this.props.fare}/>}
                 <FooterComponent/>       
             </View>
         );

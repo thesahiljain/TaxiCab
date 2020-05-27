@@ -12,34 +12,24 @@ const SearchBoxComponent = ({getInputData, toggleSearchResult, getAddressPredict
     }
 
     function getSelectedPickUp() {
-        if(selectedAddress)
-            if(selectedAddress.selectedPickUp)
-                if(selectedAddress.selectedPickUp.address)
-                    return selectedAddress.selectedPickUp.address;
+        if(selectedAddress && selectedAddress.selectedPickUp && selectedAddress.selectedPickUp.address) return selectedAddress.selectedPickUp.address;
         return '';
     }
-
-    function getSelectedDropOff() {
-        if(selectedAddress)
-            if(selectedAddress.selectedDropOff)
-                if(selectedAddress.selectedDropOff.address)
-                    return selectedAddress.selectedDropOff.address;
-        return '';
-    }
+    
 
     return (
         <View style={styles.searchBox}>
             <View style={styles.inputWrapper}>
                 <Text style={styles.label}>PICK-UP</Text>
                 <InputGroup>
-                    <Input style={styles.inputSearch} placeholder='Choose pick-up location' onChangeText={handleInput.bind(this, 'pickUp')} onFocus={() => toggleSearchResult('pickUp')}>{getSelectedPickUp()}</Input>
+                    <Input style={styles.inputSearch} placeholder='Choose pick-up location' onChangeText={handleInput.bind(this, 'pickUp')} onFocus={() => toggleSearchResult('pickUp')}>{selectedAddress.selectedPickUp.address}</Input>
                     <Icon name='search' size={20} color='#aaa' onPress={() => getAddressPredictions()}/>
                 </InputGroup>
             </View>
             <View style={styles.secondInputWrapper}>
                 <Text style={styles.label}>DROP-OFF</Text>
                 <InputGroup>
-                    <Input style={styles.inputSearch} placeholder='Choose drop-off location' onChangeText={handleInput.bind(this, 'dropOff')} onFocus={() => toggleSearchResult('dropOff')}>{getSelectedDropOff()}</Input>
+                    <Input style={styles.inputSearch} placeholder='Choose drop-off location' onChangeText={handleInput.bind(this, 'dropOff')} onFocus={() => toggleSearchResult('dropOff')}>{selectedAddress.selectedDropOff.address}</Input>
                     <Icon name='search' size={20} color='#aaa'  onPress={() => getAddressPredictions()}/>
                 </InputGroup>
             </View>

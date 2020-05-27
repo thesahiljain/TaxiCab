@@ -112,6 +112,7 @@ export function getSelectedAddress(payload) {
 function handleGetSelectedAddress(state, action) {
     let selectedTitle = state.resultTypes.pickUp ? 'selectedPickUp' : 'selectedDropOff';
     return update(state, {
+        fare : { $set : null},
         selectedAddress : { [selectedTitle] : { $set : action.payload } },
         resultTypes : { pickUp : { $set : false }, dropOff : { $set : false } },
         predictions : { $set : {} }
@@ -119,9 +120,8 @@ function handleGetSelectedAddress(state, action) {
 }
 
 function handleGetFare(state, action) {
-    ToastAndroid.show(JSON.stringify(action.payload), ToastAndroid.SHORT);
     return update(state, {
-        fare : { $set : action.payload.fair },
+        fare : { $set : action.payload.fare },
         distance : { $set : action.payload.distance },
         duration : { $set : action.payload.duration }
     });

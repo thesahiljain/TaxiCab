@@ -189,6 +189,9 @@ android {
 }
 
 dependencies {
+
+    implementation 'com.google.android.libraries.places:places:2.2.0'
+
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
