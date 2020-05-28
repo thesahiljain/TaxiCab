@@ -17,19 +17,19 @@ const FareComponent = ({fare}) => {
 const styles = StyleSheet.create({
     fareContainer: {
         width: width,
-        height: 50,
+        height: 40,
         padding: 10,
         backgroundColor: "#06c",
         alignItems : 'center',
         justifyContent : 'center'
     },
     fareText: {
-        fontSize: 25,
+        fontSize: 20,
         color : '#e6f2ff'
     },
     amount:{
         fontWeight: "bold",
-        fontSize: 25,
+        fontSize: 20,
         color : '#fff'
     }
 });

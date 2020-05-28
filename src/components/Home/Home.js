@@ -6,8 +6,10 @@ import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import MapComponent from './MapComponent';
 import HeaderComponent from '../UI/HeaderComponent';
 import FooterComponent from '../UI/FooterComponent';
-import { getCurrentLocation, getInputData, getAddressPredictions, getSelectedAddress, toggleSearchResult } from './HomeUtils';
 import FareComponent from './FareComponent';
+import FabComponent from './FabComponent';
+
+import { getCurrentLocation, getInputData, getAddressPredictions, getSelectedAddress, toggleSearchResult, bookCar } from './HomeUtils';
  
 const mapStateToProps = (state) => ({
     region : state.home.region,
@@ -16,9 +18,10 @@ const mapStateToProps = (state) => ({
     predictions : state.home.predictions || [],
     selectedAddress : state.home.selectedAddress || {},
     fare : state.home.fare,
+    booking : state.home.booking || {}
 });
 
-const mapActionCreators = { getCurrentLocation, getInputData, getAddressPredictions, toggleSearchResult, getSelectedAddress };
+const mapActionCreators = { getCurrentLocation, getInputData, getAddressPredictions, toggleSearchResult, getSelectedAddress, bookCar };
 
 class Home extends React.Component {
 
@@ -39,8 +42,9 @@ class Home extends React.Component {
                     predictions={this.props.predictions}
                     getSelectedAddress={this.props.getSelectedAddress}
                     selectedAddress={this.props.selectedAddress}/>
+                {this.props.fare && <FabComponent bookCar={this.props.bookCar}/>}
                 {this.props.fare && <FareComponent fare={this.props.fare}/>}
-                <FooterComponent/>       
+                <FooterComponent/>
             </View>
         );
     }

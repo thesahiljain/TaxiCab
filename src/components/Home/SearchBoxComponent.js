@@ -7,29 +7,25 @@ const width = Dimensions.get('window').width;
 
 const SearchBoxComponent = ({getInputData, toggleSearchResult, getAddressPredictions, selectedAddress}) => {
 
+    const { selectedPickUp, selectedDropOff } = selectedAddress || {};
+
     function handleInput(key, value) { 
         getInputData({key: key, value: value});
     }
-
-    function getSelectedPickUp() {
-        if(selectedAddress && selectedAddress.selectedPickUp && selectedAddress.selectedPickUp.address) return selectedAddress.selectedPickUp.address;
-        return '';
-    }
-    
 
     return (
         <View style={styles.searchBox}>
             <View style={styles.inputWrapper}>
                 <Text style={styles.label}>PICK-UP</Text>
                 <InputGroup>
-                    <Input style={styles.inputSearch} placeholder='Choose pick-up location' onChangeText={handleInput.bind(this, 'pickUp')} onFocus={() => toggleSearchResult('pickUp')}>{selectedAddress.selectedPickUp.address}</Input>
+                    <Input style={styles.inputSearch} placeholder='Choose pick-up location' onChangeText={handleInput.bind(this, 'pickUp')} onFocus={() => toggleSearchResult('pickUp')} value={selectedPickUp && selectedPickUp.name}/>
                     <Icon name='search' size={20} color='#aaa' onPress={() => getAddressPredictions()}/>
                 </InputGroup>
             </View>
             <View style={styles.secondInputWrapper}>
                 <Text style={styles.label}>DROP-OFF</Text>
                 <InputGroup>
-                    <Input style={styles.inputSearch} placeholder='Choose drop-off location' onChangeText={handleInput.bind(this, 'dropOff')} onFocus={() => toggleSearchResult('dropOff')}>{selectedAddress.selectedDropOff.address}</Input>
+                    <Input style={styles.inputSearch} placeholder='Choose drop-off location' onChangeText={handleInput.bind(this, 'dropOff')} onFocus={() => toggleSearchResult('dropOff')} value={selectedDropOff && selectedDropOff.name}/>
                     <Icon name='search' size={20} color='#aaa'  onPress={() => getAddressPredictions()}/>
                 </InputGroup>
             </View>

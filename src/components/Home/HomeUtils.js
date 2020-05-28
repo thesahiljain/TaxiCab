@@ -9,8 +9,10 @@ const GET_ADDRESS_PREDICTIONS = 'GET_ADDRESS_PREDICTIONS';
 const GET_SELECTED_ADDRESS = 'GET_SELECTED_ADDRESS';
 const GET_FARE = 'GET_FARE';
 const TOGGLE_SEARCH_RESULT = 'TOGGLE_SEARCH_RESULT';
+const BOOK_CAR = 'BOOK_CAR';
 const DEFAULT_REGION = {latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.043, longitudeDelta: 0.0034};
 const FARE = {base : 40, distance : 10, time : 2, surge : 1};
+const SERVER = 'http://192.168.2.5:5000/api';
 
 export function getCurrentLocation() {
     return (dispatch) => {
@@ -120,10 +122,55 @@ function handleGetSelectedAddress(state, action) {
 }
 
 function handleGetFare(state, action) {
-    return update(state, {
+    return update(state, { 
         fare : { $set : action.payload.fare },
         distance : { $set : action.payload.distance },
         duration : { $set : action.payload.duration }
+    });
+}
+
+export function bookCar() {
+    return (dispatch, store) => {
+        const payload = {
+            data : {
+                userName : 'jamesbond',
+                pickUp : {
+                    address : store().home.selectedAddress.selectedPickUp.address,
+                    name : store().home.selectedAddress.selectedPickUp.name,
+                    latitude : store().home.selectedAddress.selectedPickUp.location.latitude,
+                    longitude : store().home.selectedAddress.selectedDropOff.location.longitude
+                },
+                dropOff : {
+                    address : store().home.selectedAddress.selectedDropOff.address,
+                    name : store().home.selectedAddress.selectedDropOff.name,
+                    latitude : store().home.selectedAddress.selectedDropOff.location.latitude,
+                    longitude : store().home.selectedAddress.selectedDropOff.location.longitude
+                },
+                fare : store().home.fare,
+                status : 'pending'
+            }
+        };
+        console.log('Creating a ride request');
+        fetch(SERVER+'/bookings', {method : 'POST', headers: {'Content-Type': 'application/json'}, body : JSON.stringify(payload)})
+        .then((response) => response.json())
+        .then((response) => {
+            if(response.success) dispatch({type : BOOK_CAR, payload : response.payload});
+            else {
+                console.log('Error 1 : ', response.error)
+                ToastAndroid.show('Unable to book ride', ToastAndroid.SHORT);
+            } 
+        })
+        .catch((error) => {
+            console.log('Error 2 : ', error)
+            ToastAndroid.show('Unable to book ride', ToastAndroid.SHORT);
+        });
+    }
+}
+
+function handleBookCar(state, action) {
+    ToastAndroid.show('Ride booked successfully!', ToastAndroid.SHORT);
+    return update(state, {
+        booking : { $set : action.payload }
     });
 }
 
@@ -133,7 +180,8 @@ const actionHandlers = {
     GET_ADDRESS_PREDICTIONS : handleGetAddressPredictions,
     GET_SELECTED_ADDRESS : handleGetSelectedAddress,
     GET_FARE : handleGetFare,
-    TOGGLE_SEARCH_RESULT : handleToggleSearchResult
+    TOGGLE_SEARCH_RESULT : handleToggleSearchResult,
+    BOOK_CAR : handleBookCar
 }
 
 export function HomeReducer (state = {region: DEFAULT_REGION, inputData: {}, resultTypes: {}, selectedAddress: {}}, action) {
