@@ -150,7 +150,6 @@ export function bookCar() {
                 status : 'pending'
             }
         };
-        console.log('Creating a ride request');
         fetch(SERVER+'/bookings', {method : 'POST', headers: {'Content-Type': 'application/json'}, body : JSON.stringify(payload)})
         .then((response) => response.json())
         .then((response) => {
