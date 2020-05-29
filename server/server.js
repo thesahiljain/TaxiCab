@@ -8,8 +8,9 @@ const app = express();
 
 const bookings = require('./routes/bookings');
 const drivers = require('./routes/drivers');
+const db_url = encodeURI('mongodb+srv://admin:admin@cluster0-waifx.gcp.mongodb.net/test?retryWrites=true&w=majority');
 
-mongoose.connect('mongodb+srv://admin:admin@cluster0-waifx.gcp.mongodb.net/test?retryWrites=true&w=majority', (err) => {
+mongoose.connect(db_url, (err) => {
     if(err) console.log('Unable to connect to database : ', err);
     else console.log('Successfully connected to database');
 });
