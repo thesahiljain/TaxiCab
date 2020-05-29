@@ -9,7 +9,7 @@ import FooterComponent from '../UI/FooterComponent';
 import FareComponent from './FareComponent';
 import FabComponent from './FabComponent';
 
-import { getCurrentLocation, getInputData, getAddressPredictions, getSelectedAddress, toggleSearchResult, bookCar } from './HomeUtils';
+import { getCurrentLocation, getInputData, getAddressPredictions, getSelectedAddress, getNearByDrivers, toggleSearchResult, bookCar } from './HomeUtils';
  
 const mapStateToProps = (state) => ({
     region : state.home.region,
@@ -21,7 +21,7 @@ const mapStateToProps = (state) => ({
     booking : state.home.booking || {}
 });
 
-const mapActionCreators = { getCurrentLocation, getInputData, getAddressPredictions, toggleSearchResult, getSelectedAddress, bookCar };
+const mapActionCreators = { getCurrentLocation, getInputData, getAddressPredictions, toggleSearchResult, getSelectedAddress, getNearByDrivers, bookCar };
 
 class Home extends React.Component {
 

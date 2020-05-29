@@ -54,7 +54,7 @@ export function getDriverLocation() {
         fetch(SERVER+'/driverLocation/'+id, {method : 'GET'})
         .then((response) => response.json())
         .then((response) => {
-            dispatch({type : GET_DRIVER_LOCATION, payload : response.body});
+            dispatch({type : GET_DRIVER_LOCATION, payload : response.driver});
         })
         .catch((error) => console.log('Error obtaining driver location : ', error));
     }
@@ -74,11 +74,41 @@ function handleUpdateDriverLocation(state, action) {
     });
 }
 
+export function getDistanceFromDriver() {
+    return (dispatch, store) => {
+        if(store().track.driverLocation) {
+            const origin = encodeURIComponent(store().home.selectedAddress.selectedPickUp.location.latitude + ',' + store().home.selectedAddress.selectedPickUp.location.longitude);
+            const destination = encodeURIComponent(store().track.driverLocation.coordinate.coordinates[1] + ',' + store().track.driverLocation.coordinate.coordinates[0]);
+            const key = encodeURIComponent('Ar1jQBpU6C9nXbsks79PH6PdTQoDtkYyobA4M9Q6IkNbROHrICYiuS3LcmlWOIl2');
+            const url = `http://dev.virtualearth.net/REST/v1/Routes?wayPoint.1=${origin}&Waypoint.2=${destination}&distanceUnit=km&key=${key}`;
+
+            fetch(url, {method : 'GET'})
+            .then((response) => response.json())
+            .then((response) => {
+                const distance = response.resourceSets[0].resources[0].travelDistance;
+                dispatch({type : GET_DISTANCE_FROM_DRIVER, payload : distance});
+            })
+            .catch((error) => {
+                console.log('Distance matrix error : ', error);
+                ToastAndroid.show('Unable to calculate distance between origin and driver', ToastAndroid.SHORT);
+            });
+
+        }
+    }
+}
+
+function handleGetDistanceFromDriver(state, action) {
+    return update(state, {
+        distanceFromDriver : { $set : distance }
+    });
+}
+
 const actionHandlers = {
     GET_CURRENT_LOCATION : handleGetCurrentLocation,
     GET_DRIVER_INFORMATION : handleGetDriverInfo,
     GET_DRIVER_LOCATION : handleGetDriverLocation,
-    UPDATE_DRIVER_LOCATION : handleUpdateDriverLocation
+    UPDATE_DRIVER_LOCATION : handleUpdateDriverLocation,
+    GET_DISTANCE_FROM_DRIVER : handleGetDistanceFromDriver
 }
 
 export function TrackReducer (state = {region: DEFAULT_REGION, showDriverFound: true}, action) {

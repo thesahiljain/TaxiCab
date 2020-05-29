@@ -8,8 +8,10 @@ const GET_INPUT = 'GET_INPUT';
 const GET_ADDRESS_PREDICTIONS = 'GET_ADDRESS_PREDICTIONS';
 const GET_SELECTED_ADDRESS = 'GET_SELECTED_ADDRESS';
 const GET_FARE = 'GET_FARE';
+const GET_NEARBY_DRIVERS = 'GET_NEARBY_DRIVERS';
 const TOGGLE_SEARCH_RESULT = 'TOGGLE_SEARCH_RESULT';
 const BOOK_CAR = 'BOOK_CAR';
+const BOOKING_CONFIRMED = 'BOOKING_CONFIRMED';
 const DEFAULT_REGION = {latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.043, longitudeDelta: 0.0034};
 const FARE = {base : 40, distance : 10, time : 2, surge : 1};
 const SERVER = 'http://192.168.2.5:5000/api';
@@ -146,9 +148,11 @@ export function bookCar() {
                     latitude : store().home.selectedAddress.selectedDropOff.location.latitude,
                     longitude : store().home.selectedAddress.selectedDropOff.location.longitude
                 },
+                // TODO nearby
                 fare : store().home.fare,
                 status : 'pending'
-            }
+            },
+
         };
         fetch(SERVER+'/bookings', {method : 'POST', headers: {'Content-Type': 'application/json'}, body : JSON.stringify(payload)})
         .then((response) => response.json())
@@ -172,6 +176,29 @@ function handleBookCar(state, action) {
         booking : { $set : action.payload }
     });
 }
+export function getNearByDrivers() {
+    return (dispatch, store) => {
+        const url = SERVER + '/driverLocation?latitude=19.242688&longitude=73.133715';
+        fetch(url, {method : 'GET'})
+        .then((response) => response.json())
+        .then((response) => {
+            dispatch({type : GET_NEARBY_DRIVERS, payload : response.location});
+        })
+        .catch((err) => console.log('Error in getting drivers location : ', err));
+    }
+}
+
+function handleGetNearbyDrivers(state, action) {
+    return update(state, {
+        nearByDrivers : { $set : action.payload }
+    });
+}
+
+function handleBookingConfirmed(state, action) {
+    return update(state, {
+        booking : { $set : action.payload }
+    });
+}
 
 const actionHandlers = {
     GET_CURRENT_LOCATION : handleGetCurrentLocation,
@@ -179,8 +206,10 @@ const actionHandlers = {
     GET_ADDRESS_PREDICTIONS : handleGetAddressPredictions,
     GET_SELECTED_ADDRESS : handleGetSelectedAddress,
     GET_FARE : handleGetFare,
+    GET_NEARBY_DRIVERS : handleGetNearbyDrivers,
     TOGGLE_SEARCH_RESULT : handleToggleSearchResult,
-    BOOK_CAR : handleBookCar
+    BOOK_CAR : handleBookCar,
+    BOOKING_CONFIRMED : handleBookingConfirmed
 }
 
 export function HomeReducer (state = {region: DEFAULT_REGION, inputData: {}, resultTypes: {}, selectedAddress: {}}, action) {
