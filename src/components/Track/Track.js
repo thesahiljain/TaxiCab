@@ -1,16 +1,41 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
+import { getCurrentLocation, getDriverInfo, getDriverLocation } from './TrackUtils';
 
-const mapStateToProps = (state) => ({});
+import { HeaderComponent } from '../UI/HeaderComponent';
+import MapTrackComponent from './MapTrackComponent';
+const carMarker = require('../UI/carmarker.png');
 
-const mapActionCreators = {};
+const mapStateToProps = (state) => ({
+    region : state.track.region,
+    selectedAddress : state.home.selectedAddress || {},
+    driverInfo : state.track.driverInfo || {},
+    driverLocation : state.track.driverLocation || {},
+    showDriverFound : state.track.showDriverFound,
+    showCarMarker : state.track.showCarMarker,
+    distanceFromDriver : state.track.distanceFromDriver || {}
+});
+
+const mapActionCreators = { getCurrentLocation, getDriverInfo, getDriverLocation };
 
 class Track extends React.Component {
+
+    componentDidMount() {
+        this.props.getCurrentLocation();
+        this.props.getDriverInfo();
+    }
+
     render() {
         return (
-            <View>
-                <Text>Track Screen</Text>
+            <View style={{flex:1}}>
+                <HeaderComponent/>
+                <MapTrackComponent
+                    region={this.props.region}
+                    selectedAddress={this.props.selectedAddress} 
+                    driverLocation={this.props.driverLocation}
+                    showCarMarker={this.props.showCarMarker}
+                    carMarker={carMarker}/>
             </View>
         );
     }
