@@ -6,7 +6,7 @@ const DriverLocation = require('../models/driverLocation');
 router.get('/driver/:id', (req, res) => {
     Driver.findOne({_id : req.params.id}, (err, driver) => {
         if(err) res.json({success : false, error : err});
-        else res.json({success : true, drivers : driver});
+        else res.json({success : true, driver : driver});
     });
 });
 
@@ -59,6 +59,20 @@ router.post('/driverLocation', (req, res) => {
     new DriverLocation(req.body).save((err, driverLocation) => {
         if(err) res.json({success : false, error : err});
         else res.json({success : true, driverLocation : driverLocation});
+    });
+});
+
+router.put('/driverLocationSocket/:id', (req, res) => {
+    var io = req.app.io;
+    DriverLocation.findById(req.params.id, (err, driverLocation) => {
+        if(err) res.json({success : false, message : err});
+        else {
+            driverLocation.socketId = req.body.socketId;
+            driverLocation.save((err, newDriverLocation) => {
+                if(err) res.json({success : false, message : err});
+                else res.json({success : true, driverLocation : newDriverLocation});
+            })
+        }
     });
 });
 

@@ -8,7 +8,7 @@ const GET_DRIVER_LOCATION = 'GET_DRIVER_LOCATION';
 const UPDATE_DRIVER_LOCATION = 'UPDATE_DRIVER_LOCATION';
 const GET_DISTANCE_FROM_DRIVER = 'GET_DISTANCE_FROM_DRIVER';
 const DEFAULT_REGION = {latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.043, longitudeDelta: 0.0034};
-const SERVER = 'http://192.168.2.5:5000/api';
+const SERVER = 'http://192.168.43.145:5000/api';
 
 export function getCurrentLocation() {
     return (dispatch) => {
@@ -36,7 +36,7 @@ export function getDriverInfo() {
         fetch(SERVER+'/driver/'+id, {method : 'GET'})
         .then((response) => response.json())
         .then((response) => {
-            dispatch({type : GET_DRIVER_INFORMATION, payload : response.body});
+            dispatch({type : GET_DRIVER_INFORMATION, payload : response.driver});
         })
         .catch((error) => console.log('Error obtaining driver info : ', error));
     }
@@ -54,7 +54,7 @@ export function getDriverLocation() {
         fetch(SERVER+'/driverLocation/'+id, {method : 'GET'})
         .then((response) => response.json())
         .then((response) => {
-            dispatch({type : GET_DRIVER_LOCATION, payload : response.driver});
+            dispatch({type : GET_DRIVER_LOCATION, payload : response.location});
         })
         .catch((error) => console.log('Error obtaining driver location : ', error));
     }

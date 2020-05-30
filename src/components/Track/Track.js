@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
-import { getCurrentLocation, getDriverInfo, getDriverLocation, getDistanceFromDriver } from './TrackUtils';
-
-import { HeaderComponent } from '../UI/HeaderComponent';
+import HeaderComponent from '../UI/HeaderComponent';
 import MapTrackComponent from './MapTrackComponent';
 const carMarker = require('../UI/carmarker.png');
 
+import { getCurrentLocation, getDriverInfo, getDriverLocation, getDistanceFromDriver } from './TrackUtils';
+ 
 const mapStateToProps = (state) => ({
     region : state.track.region,
     selectedAddress : state.home.selectedAddress || {},
@@ -17,13 +17,13 @@ const mapStateToProps = (state) => ({
     distanceFromDriver : state.track.distanceFromDriver || {}
 });
 
-const mapActionCreators = { getCurrentLocation, getDriverInfo, getDriverLocation, getDistanceFromDriver};
+const mapActionCreators = { getCurrentLocation, getDriverInfo, getDriverLocation, getDistanceFromDriver };
 
 class Track extends React.Component {
 
     componentDidMount() {
         this.props.getCurrentLocation();
-        this.props.getDriverInfo();
+        //this.props.getDriverInfo();
     }
 
     render() {
