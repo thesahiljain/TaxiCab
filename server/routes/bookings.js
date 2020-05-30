@@ -14,7 +14,9 @@ router.post('/bookings', (req, res) => {
     if(!booking) res.status(400).json({success : false, error : 'Bad data'});
     else new Booking(booking).save((err, savedBooking) => {
         if(err) res.json({success : false, error : err});
-        res.json({success : true, payload : booking});
+        else {
+            res.json({success : true, payload : booking});
+        }
     });
 });
 

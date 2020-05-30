@@ -6,6 +6,9 @@ import thunk from 'redux-thunk';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { createLogger } from 'redux-logger';
 
+import createSocketIoMiddleware from "redux-socket.io";
+import io from "socket.io-client/dist/socket.io";
+
 import Home from './src/components/Home/Home';
 import Track from './src/components/Track/Track';
 import { HomeReducer as home } from './src/components/Home/HomeUtils';
@@ -15,7 +18,9 @@ const App = () => {
 
   const reducer = combineReducers({home, track});
   const log = createLogger({diff: true, collapsed: true});
-  const middleWare = [thunk, log];
+  let socket = io("http://localhost:5000", {jsonp:false});
+  let socketIoMiddleware = createSocketIoMiddleware(socket, "server/");
+  const middleWare = [thunk, log, socketIoMiddleware];
   const store =  createStore(reducer, {}, applyMiddleware(...middleWare));
 
   return (

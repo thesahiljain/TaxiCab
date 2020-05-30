@@ -133,6 +133,10 @@ function handleGetFare(state, action) {
 
 export function bookCar() {
     return (dispatch, store) => {
+
+        const nearByDrivers = store().home.nearByDrivers;
+        const nearByDriver = nearByDrivers[Math.floor(Math.random()*nearByDrivers.length)];
+
         const payload = {
             data : {
                 userName : 'jamesbond',
@@ -148,11 +152,15 @@ export function bookCar() {
                     latitude : store().home.selectedAddress.selectedDropOff.location.latitude,
                     longitude : store().home.selectedAddress.selectedDropOff.location.longitude
                 },
-                // TODO nearby
                 fare : store().home.fare,
                 status : 'pending'
             },
-
+            nearByDriver:{
+                socketId:nearByDriver.socketId,
+                driverId:nearByDriver.driverId,
+                latitude:nearByDriver.coordinate.coordinates[1],
+                longitude:nearByDriver.coordinate.coordinates[0]
+            },
         };
         fetch(SERVER+'/bookings', {method : 'POST', headers: {'Content-Type': 'application/json'}, body : JSON.stringify(payload)})
         .then((response) => response.json())
@@ -164,14 +172,13 @@ export function bookCar() {
             } 
         })
         .catch((error) => {
-            console.log('Error 2 : ', error)
+            console.log('Error 2 : ', error);
             ToastAndroid.show('Unable to book ride', ToastAndroid.SHORT);
         });
     }
 }
 
 function handleBookCar(state, action) {
-    ToastAndroid.show('Ride booked successfully!', ToastAndroid.SHORT);
     return update(state, {
         booking : { $set : action.payload }
     });

@@ -23,11 +23,14 @@
     "react-native-router-flux": "^4.2.0",
     "react-native-safe-area-context": "^2.0.0",
     "react-native-screens": "^2.8.0",
+    "react-native-spinkit": "^1.5.0",
     "react-native-vector-icons": "^6.6.0",
     "react-redux": "^7.2.0",
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.3.0"
+    "redux-socket.io": "^1.4.0",
+    "redux-thunk": "^2.3.0",
+    "socket.io-client": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",

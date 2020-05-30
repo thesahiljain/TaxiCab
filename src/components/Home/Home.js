@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
+import { Actions } from "react-native-router-flux";
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 import MapComponent from './MapComponent';
@@ -11,6 +12,7 @@ import FabComponent from './FabComponent';
 const carMarker = require('../UI/carmarker.png');
 
 import { getCurrentLocation, getInputData, getAddressPredictions, getSelectedAddress, getNearByDrivers, toggleSearchResult, bookCar } from './HomeUtils';
+import FindDriverComponent from './FindDriverComponent';
  
 const mapStateToProps = (state) => ({
     region : state.home.region,
@@ -33,9 +35,20 @@ class Home extends React.Component {
         setTimeout(() => temp.props.getNearByDrivers(), 2000);
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.booking.status === "confirmed" ){
+            Actions.trackDriver({type: "reset"});
+        }
+        this.props.getCurrentLocation();
+	}
+
     render() {
+
+        const { status } = this.props.booking;
+
         return (
             <View style={{flex:1}}>
+            { (status !== 'pending') && <View style={{flex:1, ...StyleSheet.absoluteFillObject}}>
                 <HeaderComponent logo/>
                 <MapComponent 
                     region={this.props.region}
@@ -51,6 +64,7 @@ class Home extends React.Component {
                 {this.props.fare && <FabComponent bookCar={this.props.bookCar}/>}
                 {this.props.fare && <FareComponent fare={this.props.fare}/>}
                 <FooterComponent/>
+            </View> || <FindDriverComponent selectedAddress={this.props.selectedAddress}/>}
             </View>
         );
     }
