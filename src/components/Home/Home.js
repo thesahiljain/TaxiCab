@@ -37,9 +37,9 @@ class Home extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (this.props.booking.status === "confirmed" ){
-            Actions.trackDriver({type: "reset"});
+            Actions.track({type: "reset"});
         }
-        this.props.getCurrentLocation();
+        //this.props.getCurrentLocation();
 	}
 
     render() {

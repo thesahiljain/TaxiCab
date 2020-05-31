@@ -28,4 +28,6 @@ app.use('/api', bookings);
 app.use('/api', drivers);
 
 io.listen(app.listen(5000, () => console.log('Server running at port 5000')));
-app.io = io.on('connection', (socket) => console.log('Socket connected : ', socket.id));
+app.io = io.on('connection', (socket) => {
+    console.log('Socket connected : ', socket.id);
+});

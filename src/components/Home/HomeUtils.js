@@ -14,7 +14,8 @@ const BOOK_CAR = 'BOOK_CAR';
 const BOOKING_CONFIRMED = 'BOOKING_CONFIRMED';
 const DEFAULT_REGION = {latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.043, longitudeDelta: 0.0034};
 const FARE = {base : 40, distance : 10, time : 2, surge : 1};
-const SERVER = 'http://192.168.43.145:5000/api';
+//const SERVER = 'http://192.168.43.145:5000/api';
+const SERVER = require('../config').SERVER + '/api';
 
 export function getCurrentLocation() {
     return (dispatch) => {
@@ -202,6 +203,8 @@ function handleGetNearbyDrivers(state, action) {
 }
 
 function handleBookingConfirmed(state, action) {
+    console.log("Booking confirmed");
+    ToastAndroid.show("Congrats! Booking confirmed", ToastAndroid.SHORT);
     return update(state, {
         booking : { $set : action.payload }
     });

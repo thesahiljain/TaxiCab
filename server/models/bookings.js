@@ -5,7 +5,8 @@ const bookingSchema = mongoose.Schema({
     pickUp : { type : Object, required : true},
     dropOff : { type : Object, required : true },
     fare : {type : Number, required : true},
-    status : {type : String, required : true}
+    status : {type : String, required : true},
+    driverId : {type : String}
 });
 
 const Booking = module.exports = mongoose.model('Booking', bookingSchema);

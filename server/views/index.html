@@ -25,26 +25,56 @@
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js" type="text/javascript"></script>
-    </body>
-    <script>
-        var socket = io();
-        socket.on("connect", () => {
-            var driverCurrentData = {
-                "socketId" : socket.id,
-                "locationId" : "5ed11d5c3e908c25940c4254"
-            }
-            $.ajax({
-                type : "PUT",
-                url : "/api/driverLocationSocket/"+driverCurrentData.locationId,
-                dataType : "json",
-                data : driverCurrentData
-            }).done(function(response){
-                if(!response.success) {
-                    console.log('Error : ', response.message);
-                    alert('Unable to add socket id to driver');
-                }else
-                    console.log('Success adding socket to driver location');
+        <script>
+            var socket = io();
+            socket.on("connect", () => {
+                  
+                var driverCurrentData = {
+                    "socketId" : socket.id,
+                    "locationId" : "5ed11d5c3e908c25940c4254"
+                }
+                $.ajax({
+                    type : "PUT",
+                    url : "/api/driverLocationSocket/"+driverCurrentData.locationId,
+                    dataType : "json",
+                    data : driverCurrentData
+                }).done(function(response){
+                    if(!response.success) {
+                        console.log('Error : ', response.message);
+                        alert('Unable to add socket id to driver');
+                    }else{
+                        console.log('Success adding socket to driver location');
+                        createDriverRequestAction(socket);
+                    }
+                });
+
             });
-        });
+
+            function createDriverRequestAction(socket) {
+                var driverRequest = socket.id + 'driverRequest';
+                socket.on(driverRequest, function(passengerData) {
+                    console.log('Passenger request received : ', passengerData);
+                    if(passengerData){
+                        $(".btn").click(function(e){
+                            console.log("Confirm button clickled");
+                            var status = $("#bookingStatus").val();
+                            $.ajax({
+                                type: "PUT",
+                                url: "/api/bookings/" + passengerData._id,
+                                dataType: "json",
+                                data: {
+                                    "driverId": "5ed0f8249fc5ad33687b361d",
+                                    "id": passengerData._id,
+                                    "status": "confirmed"
+                                }
+                            }).done(function(response) {
+                                if (response !== "") console.log("Success");
+                                console.log(response);
+                            });
+                        });
+                    }
+                });
+            }
     </script>
+    </body>
 </html>

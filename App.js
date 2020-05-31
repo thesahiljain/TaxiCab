@@ -6,22 +6,19 @@ import thunk from 'redux-thunk';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { createLogger } from 'redux-logger';
 
-import createSocketIoMiddleware from "redux-socket.io";
-import io from "socket.io-client/dist/socket.io";
+import createSocketIoMiddleware from 'redux-socket.io';
+import io from 'socket.io-client';
 
 import Home from './src/components/Home/Home';
 import Track from './src/components/Track/Track';
 import { HomeReducer as home } from './src/components/Home/HomeUtils';
 import { TrackReducer as track } from './src/components/Track/TrackUtils';
 
+const SERVER = require('./src/components/config').SERVER;
+
 const App = () => {
 
-  const reducer = combineReducers({home, track});
-  const log = createLogger({diff: true, collapsed: true});
-  let socket = io("http://localhost:5000", {jsonp:false});
-  let socketIoMiddleware = createSocketIoMiddleware(socket, "server/");
-  const middleWare = [thunk, log, socketIoMiddleware];
-  const store =  createStore(reducer, {}, applyMiddleware(...middleWare));
+  const store = initializeStore();
 
   return (
     <Provider store={store}>
@@ -33,6 +30,21 @@ const App = () => {
       </Router>
     </Provider>
   );
+}
+
+function initializeStore() {
+  const reducer = combineReducers({home, track});
+  const log = createLogger({diff: true, collapsed: true});
+  let socket = initializeSocket();
+  let socketIoMiddleware = createSocketIoMiddleware(socket, "server/");
+  const middleWare = [thunk, log, socketIoMiddleware];
+  const store =  createStore(reducer, {}, applyMiddleware(...middleWare));
+  return store;
+}
+
+function initializeSocket() {
+  let socket = require('socket.io-client')(SERVER);
+  return socket;
 }
 
 export default App;

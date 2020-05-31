@@ -8,7 +8,8 @@ const GET_DRIVER_LOCATION = 'GET_DRIVER_LOCATION';
 const UPDATE_DRIVER_LOCATION = 'UPDATE_DRIVER_LOCATION';
 const GET_DISTANCE_FROM_DRIVER = 'GET_DISTANCE_FROM_DRIVER';
 const DEFAULT_REGION = {latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.043, longitudeDelta: 0.0034};
-const SERVER = 'http://192.168.43.145:5000/api';
+//const SERVER = 'http://192.168.43.145:5000/api';
+const SERVER = require('../config').SERVER + '/api';
 
 export function getCurrentLocation() {
     return (dispatch) => {
