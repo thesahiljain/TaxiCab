@@ -45,6 +45,7 @@
                     }else{
                         console.log('Success adding socket to driver location');
                         createDriverRequestAction(socket);
+                        createTrackDriverEvent(socket);
                     }
                 });
 
@@ -73,6 +74,48 @@
                             });
                         });
                     }
+                });
+            }
+
+            function createTrackDriverEvent(socket) {
+                socket.on("trackDriver", function(location){
+                    var driverMovement = [
+                        {lat : 19.23796, long : 73.12975},
+                        {lat : 19.239036, long : 73.128138},
+                        {lat : 19.237679, long : 73.126046},
+                        {lat : 19.238692, long : 73.123745},
+                        {lat : 19.241791, long : 73.120172},
+                        {lat : 19.241710, long : 73.124077},
+                        {lat : 19.242966, long : 73.127811},
+                        {lat : 19.243635, long : 73.129839},
+                        {lat : 19.242946, long : 73.132371},
+                    ];
+                    var index = 0;
+                    var interval = setInterval(function(){
+                        var movementObj = driverMovement[index++];
+                        if (index == driverMovement.length){
+                            clearInterval(interval);
+                            console.log(index)
+                        }          
+                        var driverCurrentLocation = {
+                            "locationId":location._id,
+                            "latitude": movementObj.lat,
+                            "longitude": movementObj.long
+                        };
+                        $.ajax({
+                            type: "PUT",
+                            url: "/api/driverLocation/" + location._id,
+                            dataType: "json",
+                            data: driverCurrentLocation
+                        }).done(function( response ) {
+                            if (!response.success) {
+                                console.log("Driver Location updated ");
+                            }
+                            else {
+                                console.log("Error in updating driver location : " + response.message);
+                            }
+                        });
+                    }, 5000);
                 });
             }
     </script>

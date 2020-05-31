@@ -100,7 +100,7 @@ export function getDistanceFromDriver() {
 
 function handleGetDistanceFromDriver(state, action) {
     return update(state, {
-        distanceFromDriver : { $set : distance }
+        distanceFromDriver : { $set : action.payload }
     });
 }
 

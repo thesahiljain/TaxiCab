@@ -18,9 +18,12 @@ router.get('/drivers', (req, res) => {
 });
 
 router.get('/driverLocation/:id', (req, res) => {
-    DriverLocation.findOne({driverId : req.params.id}, (err, driver) => {
+    DriverLocation.findOne({driverId : req.params.id}, (err, location) => {
         if(err) res.json({success : false, error : err});
-        else res.json({success : true, driver : driver});
+        else {
+            res.json({success : true, location : location});
+            req.app.io.emit('trackDriver', location);
+        }
     });
 });
 
@@ -72,6 +75,29 @@ router.put('/driverLocationSocket/:id', (req, res) => {
                 if(err) res.json({success : false, message : err});
                 else res.json({success : true, driverLocation : newDriverLocation});
             })
+        }
+    });
+});
+
+router.put('/driverLocation/:id', (req, res) => {
+    DriverLocation.findById(req.params.id, (err, driverLocation) => {
+        if(err) res.json({success : false, message : err});
+        else {
+            driverLocation.socketId = req.body.socketId;
+            driverLocation.coordinate.coordinates = [
+                parseFloat(req.body.longitude),
+                parseFloat(req.body.latitude)
+            ];
+            driverLocation.save((err, newDriverLocation) => {
+                if(err) res.json({success : false, message : err});
+                else {
+                    res.json({success : true, driverLocation : newDriverLocation});
+                    req.app.io.emit('action', {
+                        type : 'UPDATE_DRIVER_LOCATION',
+                        payload : newDriverLocation
+                    });
+                }
+            });
         }
     });
 });
