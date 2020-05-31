@@ -107,13 +107,12 @@
                             url: "/api/driverLocation/" + location._id,
                             dataType: "json",
                             data: driverCurrentLocation
-                        }).done(function( response ) {
-                            if (!response.success) {
-                                console.log("Driver Location updated ");
-                            }
-                            else {
+                        }).done(function(response) {
+                            console.log('Update response : ', response);
+                            if (response.driverLocation)
+                                console.log("Driver Location updated successfully!");
+                            else
                                 console.log("Error in updating driver location : " + response.message);
-                            }
                         });
                     }, 5000);
                 });

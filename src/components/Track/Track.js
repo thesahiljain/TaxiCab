@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import HeaderComponent from '../UI/HeaderComponent';
 import MapTrackComponent from './MapTrackComponent';
+import DriverFoundComponent from './DriverFoundComponent';
 const carMarker = require('../UI/carmarker.png');
 
 import { getCurrentLocation, getDriverInfo, getDriverLocation, getDistanceFromDriver } from './TrackUtils';
@@ -23,7 +24,7 @@ class Track extends React.Component {
 
     componentDidMount() {
         this.props.getCurrentLocation();
-        //this.props.getDriverInfo();
+        this.props.getDriverInfo();
     }
 
     render() {
@@ -36,6 +37,9 @@ class Track extends React.Component {
                     driverLocation={this.props.driverLocation}
                     showCarMarker={this.props.showCarMarker}
                     carMarker={carMarker}/>
+                {
+                    this.props.showDriverFound && <DriverFoundComponent driverInfo={this.props.driverInfo} getDriverLocation={this.props.getDriverLocation}/>
+                }
             </View>
         );
     }

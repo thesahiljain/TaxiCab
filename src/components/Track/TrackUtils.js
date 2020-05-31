@@ -55,6 +55,7 @@ export function getDriverLocation() {
         fetch(SERVER+'/driverLocation/'+id, {method : 'GET'})
         .then((response) => response.json())
         .then((response) => {
+            console.log('Initial driver location : ', response.location.coordinate.coordinates);
             dispatch({type : GET_DRIVER_LOCATION, payload : response.location});
         })
         .catch((error) => console.log('Error obtaining driver location : ', error));

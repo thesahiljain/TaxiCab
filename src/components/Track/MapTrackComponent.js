@@ -7,13 +7,18 @@ const width = Dimensions.get("window").width
 const MapTrackComponent = ({region, driverLocation, showCarMarker, selectedAddress, carMarker}) => {
 
     const { selectedPickUp, selectedDropOff } = selectedAddress || {};
+    console.log('Driver Location on : ', driverLocation);
+    if(driverLocation.coordinate)
+        console.log('Driver location exists');
+    else
+        console.log('Location doesnt exist');
 
     return (
         <View style={styles.container}>
             <MapView provider={PROVIDER_GOOGLE} style={styles.map} region={region}>
                 { selectedPickUp && <Marker coordinate={selectedPickUp.location} pinColor='green'/> }
                 { selectedDropOff && <Marker coordinate={selectedDropOff.location} pinColor='blue'/> }
-                { showCarMarker && <Marker coordinate={selectedPickUp.location} image={carMarker}/> }
+                { driverLocation.coordinate && <Marker coordinate={{latitude : driverLocation.coordinate.coordinates[1], longitude : driverLocation.coordinate.coordinates[0]}} image={carMarker}/> }
             </MapView>
         </View>
     );
