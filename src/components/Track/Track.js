@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import HeaderComponent from '../UI/HeaderComponent';
 import MapTrackComponent from './MapTrackComponent';
 import DriverFoundComponent from './DriverFoundComponent';
+import DriverFooterProfileComponent from './DriverFooterProfileComponent';
+import DriverOnTheWayFooterComponent from './DriverOnTheWayFooterComponent';
 const carMarker = require('../UI/carmarker.png');
 
 import { getCurrentLocation, getDriverInfo, getDriverLocation, getDistanceFromDriver } from './TrackUtils';
@@ -15,7 +17,7 @@ const mapStateToProps = (state) => ({
     driverLocation : state.track.driverLocation || {},
     showDriverFound : state.track.showDriverFound,
     showCarMarker : state.track.showCarMarker,
-    distanceFromDriver : state.track.distanceFromDriver || {}
+    distanceFromDriver : state.track.distanceFromDriver
 });
 
 const mapActionCreators = { getCurrentLocation, getDriverInfo, getDriverLocation, getDistanceFromDriver };
@@ -27,6 +29,12 @@ class Track extends React.Component {
         this.props.getDriverInfo();
     }
 
+    componentWillReceiveProps(nextProps) {
+		if(this.props.driverLocation && nextProps.driverLocation !== this.props.driverLocation){
+			this.props.getDistanceFromDriver();
+		}
+	}
+
     render() {
         return (
             <View style={{flex:1}}>
@@ -37,9 +45,17 @@ class Track extends React.Component {
                     driverLocation={this.props.driverLocation}
                     showCarMarker={this.props.showCarMarker}
                     carMarker={carMarker}/>
+                <DriverFooterProfileComponent driverInfo={this.props.driverInfo}/>
+
+                {
+                    this.props.distanceFromDriver &&
+					<DriverOnTheWayFooterComponent driverInfo={this.props.driverInfo} distanceFromDriver={this.props.distanceFromDriver}/>
+				}
+
                 {
                     this.props.showDriverFound && <DriverFoundComponent driverInfo={this.props.driverInfo} getDriverLocation={this.props.getDriverLocation}/>
                 }
+
             </View>
         );
     }

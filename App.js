@@ -18,6 +18,7 @@ const SERVER = require('./src/components/config').SERVER;
 
 const App = () => {
 
+  console.disableYellowBox = true;
   const store = initializeStore();
 
   return (
